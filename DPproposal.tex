@@ -1,4 +1,4 @@
-\documentclass[11pt, oneside]{article}   	% use "amsart" instead of "article" for AMSLaTeX format
+\documentclass[12pt]{article}
 \usepackage{geometry}                		% See geometry.pdf to learn the layout options. There are lots.
 \geometry{letterpaper}                   		% ... or a4paper or a5paper or ... 
 %\geometry{landscape}                		% Activate for for rotated page geometry
@@ -8,11 +8,59 @@
 \usepackage{amssymb}
 \setlength{\parindent}{0pt}
 
-\title{Creating a Versioning File System}
-\author{Bo Song 11302010003 \ YiTing Cheng 11302010050 \  YuWei Zhou 11302010067}
+
 
 \begin{document}
-\maketitle
+
+\begin{titlepage}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
+
+\center % Center everything on the page
+ 
+%----------------------------------------------------------------------------------------
+%	HEADING SECTIONS
+%----------------------------------------------------------------------------------------
+
+\textsc{\LARGE}\\[1.5cm] % Name of your university/college
+\textsc{\Large Computer System Engineering}\\[0.5cm] % Major heading such as course name
+\textsc{\large Design Project 1 Proposal}\\[0.5cm] % Minor heading such as course title
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\HRule \\[0.4cm]
+{ \huge \bfseries Create a Versioning File System}\\[0.4cm] % Title of your document
+\HRule \\[1.5cm]
+ 
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+% If you don't want a supervisor, uncomment the two lines below and remove the section above
+\Large \emph{Author:}\\
+Bo Song  \textsc{11302010003}\\% Your name
+YiTing Cheng  \textsc{11302010050}\\% Your name
+YuWei Zhou  \textsc{11302010067}\\[3cm]% Your name
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+
+{\large \today}\\[3cm] % Date, change the \today to a set date if you want to be precise
+
+%----------------------------------------------------------------------------------------
+%	LOGO SECTION
+%----------------------------------------------------------------------------------------
+
+%\includegraphics{Logo}\\[1cm] % Include a department/university logo - this will require the graphicx package
+ 
+%----------------------------------------------------------------------------------------
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
 \section*{Overview}
 The goal of this design project is to create a versioning file system. The versioning or continuous snapshotting file system is defined to store all versions of each file over time.When user modifies a file(specifically, write or truncate something in a file) or modifies a directory(add, delete or rename files in it), the versioning file system create a new version after closing the file or directory and store the old version which can be only read by users. The system can be realized by extending inodes, interfaces and adopting copy-on-write memory management strategy based on Unix file system. 
 \section*{Design Description}
@@ -22,7 +70,7 @@ The goal of this design project is to create a versioning file system. The versi
 \item[Bitmap] - Maintaining the block versioning state of file or directory, in order to realize COW memory management, checking whether a new version is needed and performance optimization.
 \item[Next] - A pointer to the next old version of an inode.
 \item[Record] - A bit to indicate whether an user excludes the file or directory from versioning. Zero is default which is not excluded.
-\item[Head Pointer] - a pointer to a block containing addresses of the head of sublists of inodes discussed in layout section. 
+\item[Head Pointer] - A pointer to a block containing addresses of the head of sublists of inodes discussed in layout section. 
 \end{description}
 \subsection*{Memory Management}
 When a new version is created, it is waste to copy all the block in the old version. So copy-on-write(abbreviated COW) is adopted to implement multiple versions of data compactly. When we open a file, we duplicate the inode first. The duplicated inodes initially share all data blocks(including direct and indirect blocks) in common. When a block is update, which means writing or truncating in a file or add or delete files in a directory, the file system allocates a new physical block to hold the new data and change the block address and the related bitmap in the inode. When the user close the file, the new version of inode is finally created with only a few extra blocks. If there is no modification, which means bitmap is all zero, the duplicated inode will release. The COW strategy extremely improve the memory utilization in the system.
