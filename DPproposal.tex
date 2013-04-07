@@ -62,12 +62,12 @@ YuWei Zhou  \textsc{11302010067}\\[3cm]% Your name
 
 \end{titlepage}
 \section*{Overview}
-The goal of this design project is to create a versioning file system. The versioning or continuous snapshotting file system is defined to store all versions of each file over time. When users modifies a file(specifically, write or truncate something in a file) or modifies a directory(add, delete or rename files in it), the versioning file system create a new version after closing the file or directory and store the old version which can be only read by users. The system can be realized by extending inodes, interfaces and adopting copy-on-write memory management strategy based on Unix file system. 
+The goal of this design project is to create a versioning file system. The versioning or continuous snapshotting file system is designed to store all versions of each file over time. When users modifies a file(specifically, write or truncate something in a file) or modifies a directory(add, delete or rename files in it), the versioning file system create a new version after closing the file or directory and store the old version which can be only read by users. The system can be realized by extending inodes, interfaces and adopting copy-on-write memory management strategy based on Unix file system. 
 \section*{Design Description}
 \subsection*{Data Structure}To implement different versions of a file, some extra fields are added to the inode structure as follows(Figure 1).
 \begin{description}
-\item [Timestamp] - When a new version is created, a unsigned integer is recorded, representing the number of seconds passed since a epoch which is predefined in the system.
-\item[Bitmap] - Maintaining the block versioning state of file or directory, in order to realize COW memory management, checking whether a new version is needed and performance optimization.
+\item [Timestamp] - When a new version is created, an unsigned integer is recorded, representing the number of seconds passed since an epoch which is predefined in the system.
+\item[Bitmap] - Maintaining the block versioning state of file or directory, in order to realize COW memory management and optimize performance.
 \item[Next] - A pointer to the next old version of an inode.
 \item[Record] - A bit to indicate whether an user excludes the file or directory from versioning. Zero is default which is not excluded.
 \item[Head Pointer] - A pointer to a block containing addresses of the head of sublists of inodes discussed in the layout section. 
