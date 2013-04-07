@@ -73,7 +73,7 @@ The goal of this design project is to create a versioning file system. The versi
 \item[Head Pointer] - A pointer to a block containing addresses of the head of sublists of inodes discussed in the layout section. 
 \end{description}
 \begin{figure}[!ht]
-\includegraphics{figure1.jpg}
+\includegraphics{inode.jpg}
 \caption{Data Structure and COW}Five new fields are added to inode. A head pointer points to a block containing the timestamp and address of each sublist head. The block pointers in inode only point to different blocks when the old block is updated.\\[0.5em] \hrule
 \end{figure}
 \subsection*{Memory Management}
